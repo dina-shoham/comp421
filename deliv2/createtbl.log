@@ -1,0 +1,77 @@
+(c) Copyright IBM Corporation 1993,2007
+Command Line Processor for DB2 Client 11.5.4.0
+
+You can issue database manager commands and SQL statements from the command 
+prompt. For example:
+    db2 => connect to sample
+    db2 => bind sample.bnd
+
+For general help, type: ?.
+For command help, type: ? command, where command can be
+the first few keywords of a database manager command. For example:
+ ? CATALOG DATABASE for help on the CATALOG DATABASE command
+ ? CATALOG          for help on all of the CATALOG commands.
+
+To exit db2 interactive mode, type QUIT at the command prompt. Outside 
+interactive mode, all commands must be prefixed with 'db2'.
+To list the current command option settings, type LIST COMMAND OPTIONS.
+
+For more detailed help, refer to the Online Reference Manual.
+
+db2 => db2 => db2 => db2 => db2 => CONNECT TO cs421
+
+   Database Connection Information
+
+ Database server        = DB2/LINUXX8664 11.5.4.0
+ SQL authorization ID   = DSHOHA
+ Local database alias   = CS421
+
+
+db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Parent ( person_id INTEGER NOT NULL, phone_num CHAR(12), name CHAR(30), blood_type CHAR(3), date_of_birth DATE, profession CHAR(20), email CHAR(40), quebec_health_id CHAR(12), address CHAR(100), PRIMARY KEY (person_id) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE HC_Institution ( email CHAR(40) NOT NULL, address CHAR(100), website CHAR(60), name CHAR(30), phone_num CHAR(12), PRIMARY KEY (email) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Birthing_Center ( email CHAR(40) NOT NULL, PRIMARY KEY (email), FOREIGN KEY (email) REFERENCES HC_Institution )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Community_Clinic ( email CHAR(40) NOT NULL, PRIMARY KEY (email), FOREIGN KEY (email) REFERENCES HC_Institution )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Midwife ( practitioner_id CHAR(12) NOT NULL, phone_num CHAR(12), name CHAR(30), email CHAR(40), institution_email CHAR(60), PRIMARY KEY (practitioner_id), FOREIGN KEY (institution_email) REFERENCES HC_institution )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Couple ( couple_id INTEGER NOT NULL, num_pregnancy INTEGER NOT NULL, mother_id INTEGER, PRIMARY KEY (couple_id, num_pregnancy), FOREIGN KEY (mother_id) REFERENCES Parent )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Father ( person_id INTEGER NOT NULL, couple_id INTEGER NOT NULL, num_pregnancy INTEGER NOT NULL, PRIMARY KEY (couple_id, person_id, num_pregnancy), FOREIGN KEY (person_id) REFERENCES Parent, FOREIGN KEY (couple_id, num_pregnancy) REFERENCES Couple )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Pregnancy ( preg_id INTEGER NOT NULL, birth_time_frame CHAR(6), --YYYYMM
+ due_date_period DATE, due_date_ultrasound DATE, due_date_final DATE, is_home_birth BOOLEAN, couple_id INTEGER, num_pregnancy INTEGER, primary_mw_id CHAR(12), secondary_mw_id CHAR(12), birthing_center_email CHAR(40), PRIMARY KEY (preg_id), FOREIGN KEY (couple_id, num_pregnancy) REFERENCES Couple, FOREIGN KEY (primary_mw_id) REFERENCES Midwife, FOREIGN KEY (secondary_mw_id) REFERENCES Midwife, FOREIGN KEY (birthing_center_email) REFERENCES Birthing_Center )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Baby ( baby_id INTEGER NOT NULL, blood_type CHAR(3), name CHAR(30), birth_date DATE, birth_time TIME, sex CHAR(10), --male, female, intersex, etc.
+ preg_id INTEGER, PRIMARY KEY (baby_id), FOREIGN KEY (preg_id) REFERENCES Pregnancy )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Lab_Tech ( person_id INTEGER NOT NULL, phone_num CHAR(12), name CHAR(30), PRIMARY KEY (person_id) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Info_Session ( session_id INTEGER NOT NULL, session_date DATE, session_time TIME, language CHAR(20), host_id CHAR(12), PRIMARY KEY (session_id), FOREIGN KEY (host_id) REFERENCES Midwife )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Invitation ( couple_id INTEGER NOT NULL, num_pregnancy INTEGER NOT NULL, session_id INTEGER NOT NULL, PRIMARY KEY (couple_id, num_pregnancy, session_id), FOREIGN KEY (couple_id, num_pregnancy) REFERENCES Couple, FOREIGN KEY (session_id) REFERENCES Info_Session )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Appointment ( appt_id INTEGER NOT NULL, appt_date DATE, appt_time TIME, preg_id INTEGER, mw_id CHAR(12), PRIMARY KEY (appt_id), FOREIGN KEY (preg_id) REFERENCES Pregnancy, FOREIGN KEY (mw_id) REFERENCES Midwife )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Appt_Note ( note_id INTEGER NOT NULL, timestamp TIMESTAMP, observations VARCHAR(8000), appt_id INTEGER, PRIMARY KEY (note_id), FOREIGN KEY (appt_id) REFERENCES Appointment )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE Medical_Test ( test_id INTEGER NOT NULL, appt_id INTEGER NOT NULL, test_type CHAR(40), prescription_date DATE, sample_date DATE, lab_work_date DATE, test_result CHAR(100), lt_id INTEGER, mother_id INTEGER, baby_id INTEGER, PRIMARY KEY (test_id), FOREIGN KEY (appt_id) REFERENCES Appointment, FOREIGN KEY (lt_id) REFERENCES Lab_Tech, FOREIGN KEY (mother_id) REFERENCES Parent, FOREIGN KEY (baby_id) REFERENCES Baby, CHECK (prescription_date < lab_work_date) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 => 
